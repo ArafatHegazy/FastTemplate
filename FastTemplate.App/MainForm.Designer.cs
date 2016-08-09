@@ -53,7 +53,7 @@
             this.configuraitonFileTextbox.Name = "configuraitonFileTextbox";
             this.configuraitonFileTextbox.Size = new System.Drawing.Size(667, 22);
             this.configuraitonFileTextbox.TabIndex = 1;
-            this.configuraitonFileTextbox.Text = "d:\\ConfigFile.json";
+            this.configuraitonFileTextbox.Text = "";
             // 
             // templateTextbox
             // 
@@ -61,7 +61,7 @@
             this.templateTextbox.Name = "templateTextbox";
             this.templateTextbox.Size = new System.Drawing.Size(667, 22);
             this.templateTextbox.TabIndex = 3;
-            this.templateTextbox.Text = "D:\\Templates\\Noitso.Templates.CSharpLibrary\\";
+            this.templateTextbox.Text = "";
             // 
             // label2
             // 

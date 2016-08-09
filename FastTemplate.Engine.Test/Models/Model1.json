@@ -1,0 +1,13 @@
+{
+	'ApplicationData': {
+		'Name': 'ApplicationOne',
+		'Description': 'This is a greate application', 
+		'Namespace': 'MyApplication.Application.Library',
+		'ProjectType': 'DotNetLibrary'
+	},
+	'Modules': [
+		{'Name':'module1','InlcudeInJenkinsBuild':true},
+		{'Name':'module2','InlcudeInJenkinsBuild':false},
+		{'Name':'module3','InlcudeInJenkinsBuild':true}
+		]
+}

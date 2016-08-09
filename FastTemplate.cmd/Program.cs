@@ -16,7 +16,7 @@ namespace FastEngine
             Console.WriteLine("Generation started.");
             try
             {
-                Engine.ProcessTemplate(args[0], args[1], args[2]);
+                Engine.GetEngine().ProcessTemplate(args[0], args[1], args[2]);
                 Console.WriteLine("Generation finished successfully.");
             }
             catch (Exception e)

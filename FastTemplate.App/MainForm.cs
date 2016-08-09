@@ -23,7 +23,7 @@ namespace FastTemplate.App
             logTextbox.Text = "Generation started.\n";
             try
             {
-                Engine.Engine.ProcessTemplate(configuraitonFileTextbox.Text, templateTextbox.Text, outputTextbox.Text);
+                Engine.Engine.GetEngine().ProcessTemplate(configuraitonFileTextbox.Text, templateTextbox.Text, outputTextbox.Text);
                 logTextbox.Text += "Generation finished successfully.\n";
             }
             catch (Exception ex)

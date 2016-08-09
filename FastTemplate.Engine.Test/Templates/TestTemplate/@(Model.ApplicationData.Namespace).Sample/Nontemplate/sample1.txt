@@ -1,0 +1,12 @@
+﻿This is the @TemplateEngine.DataStore["CurrentJob"]  job
+
+@Model.ApplicationData.Name
+@Model.ApplicationData.Description
+@Model.ApplicationData.Namespace
+@Model.ApplicationData.ProjectType
+
+@foreach(var module in Model.Modules){
+	if((bool)module.InlcudeInJenkinsBuild) {
+<Text>Name: @module.Name ,  InlcudeInJenkinsBuild:@module.InlcudeInJenkinsBuild </Text>
+	}
+}
