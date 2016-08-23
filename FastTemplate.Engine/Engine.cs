@@ -1,44 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using Newtonsoft.Json;
 using RazorEngine;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
 using RazorEngine.Text;
-using System.Linq;
+using FastTemplate.Engine.Storage;
 
 namespace FastTemplate.Engine
 {
-    /// <summary>
-    /// Template engine
-    /// </summary>
     public class Engine
     {
-        private static Engine _engine;
-
-        public static Engine GetEngine()
+        public IStorage Storage { get; set; }
+         
+        public Engine(IStorage storage, List<Type> extensions)
         {
-            return _engine;
+            Storage = storage;
+            InitializeRazorEngine(extensions);
         }
 
-        public static Engine InitializeEngine(List<String> namespaces)
-        {
-            return _engine ?? (_engine = new Engine(namespaces));
-        }
-
-        private Engine(List<String> namespaces)
-        {
-            InitializeRazorEngine(namespaces);
-        }
-
-        private void InitializeRazorEngine(List<String> namespaces)
+        public void InitializeRazorEngine(List<Type> extensions)
         {
             var config = new TemplateServiceConfiguration();
             config.Language = Language.CSharp;
             config.EncodedStringFactory = new RawStringFactory();
-            config.Namespaces.Add("FastTemplate.Engine.Utilities");
-            namespaces?.ForEach(ns => config.Namespaces.Add(ns));
+            extensions?.ForEach(e =>
+            {
+                config.Namespaces.Add(e.AssemblyQualifiedName);
+                ITemplateExtension o = (ITemplateExtension)Activator.CreateInstance(e);
+                o.RegisterTemplateEngine(this);
+            });
             var service = RazorEngineService.Create(config);
             RazorEngine.Engine.Razor = service;
         }
@@ -59,7 +50,7 @@ namespace FastTemplate.Engine
         /// <param name="modelFile">Model file full path</param>
         public void ProcessTemplate(string modelFile, string templateFolder, string outputFolder)
         {
-            string modelJson = File.ReadAllText(modelFile);
+            string modelJson = Storage.ReadFromFile(modelFile);
             dynamic model = JsonConvert.DeserializeObject<dynamic>(modelJson);
             ProcessFolder(templateFolder, outputFolder, model);
         }
@@ -69,14 +60,14 @@ namespace FastTemplate.Engine
             CurrentTemplatePath = templateFolder;
             CurrentOutputPath = outputFolder;
 
-            string[] files = Directory.GetFiles(templateFolder);
-            files.ToList().ForEach( file => ProcessFile(file, outputFolder, data));
+            var files = Storage.GetFiles(templateFolder);
+            files.ForEach( file => ProcessFile(file, outputFolder, data));
 
-            string[] directories = Directory.GetDirectories(templateFolder);
-            directories.ToList().FindAll(directory => !directory.EndsWith(".template")).ForEach(directory =>
+            var directories = Storage.GetDirectories(templateFolder);
+            directories.FindAll(directory => !directory.EndsWith(".template")).ForEach(directory =>
             {
-                var newOutputFolder = directory.RemovePath().ProcessTemplate(data).AddPath(outputFolder);
-                newOutputFolder.CreateDirectory();
+                var newOutputFolder = ProcessString(directory.RemovePath(),data).AddPath(outputFolder);
+                Storage.CreateDirectory(newOutputFolder);
                 ProcessFolder(directory, newOutputFolder, data);
 
             });
@@ -87,12 +78,12 @@ namespace FastTemplate.Engine
             var extention = file.GetExtention();
             if (extention == ".template")
                 return;
-            string template = File.ReadAllText(file);
+            string template = Storage.ReadFromFile(file);
             var result = ProcessString(template, data);
             if (extention == ".templatecode")
                 return;
-            var outputfile = file.RemovePath().ProcessTemplate(data).AddPath(outputFolder);
-            result.WriteToFile(outputfile);
+            var outputfile = ProcessString(file.RemovePath(),data).AddPath(outputFolder);
+            Storage.WriteToFile(outputfile, result);
         }
 
     }

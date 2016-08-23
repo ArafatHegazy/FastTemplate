@@ -1,6 +1,0 @@
-﻿@{
-	TemplateProcessor.DataStore["CurrentJob"] = "dev";
-	TemplateProcessor.ProcessFileTemplate(TemplateProcessor.GetCurrentTemplatePath() + "\\" + "jenkins.template", TemplateProcessor.GetCurrentOutputPath() + "\\jenkins.dev",Model);
-	TemplateProcessor.DataStore["CurrentJob"] = "release";
-	TemplateProcessor.ProcessFileTemplate(TemplateProcessor.GetCurrentTemplatePath() + "\\" + "jenkins.template", TemplateProcessor.GetCurrentOutputPath() + "\\jenkins.release",Model);
-}

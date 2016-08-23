@@ -66,10 +66,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine.cs" />
+    <Compile Include="IEngine.cs" />
+    <Compile Include="ITemplateExtension.cs" />
+    <Compile Include="Storage\IStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringExtentions.cs" />
-    <Compile Include="TemplateRequest.cs" />
-    <Compile Include="Utilities\TemplateProcessor.cs" />
+    <Compile Include="Storage\FileStorage.cs" />
+    <Compile Include="FileUtilityExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

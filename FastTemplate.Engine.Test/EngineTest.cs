@@ -6,35 +6,22 @@ namespace FastTemplate.Engine.Test
     [TestFixture]
     public class EngineTest
     {
+        private Engine engine;
         [SetUp]
         public void Setup()
         {
-            Engine.InitializeEngine(null);
+            engine = new Engine(new MemoryStorage("base"), null);
         }
 
         [Test]
-        public void JenkinsTemplate()
-        {
-            Engine.GetEngine().ProcessTemplate(@"C:\FastTemplate.Engine.Test\Models\Model1.json",
-                @"C:\FastTemplate.Engine.Test\Templates\Jenkins", @"C:\FastTemplate.Engine.Test\Output\Model1.Jenkins");
-        }
-
-        [Test]
-        public void SimpleJenkinsTemplate()
-        {
-            Engine.GetEngine().ProcessTemplate(@"C:\FastTemplate.Engine.Test\Models\Model1.json",
-                @"C:\FastTemplate.Engine.Test\Templates\SimpleJenkins", @"C:\FastTemplate.Engine.Test\Output\Model1.SimpleJenkins");
-        }
-
-        [Test]
-        public void TestTemplateEngine()
+        public void SimpleTextTempalteProcessingTest()
         {
             var model = new
             {
                 Name = "arafat",
-                IsActive = false
+                IsActive = true
             };
-            string template =
+            var template =
 @"Hello @(Model.Name)212
 @if(Model.IsActive) {
 <text>
@@ -47,9 +34,47 @@ no
 }
 welcome to RazorEngine!
 ";
-            var result = Engine.GetEngine().ProcessString(template, model);
+            var expected =
+@"Hello arafat212
+
+yes
+
+welcome to RazorEngine!
+";
+            var result = engine.ProcessString(template, model);
             result.ShouldNotBeEmpty();
+            result.ShouldBe(expected);
+        }
+        [Test]
+        public void TestEngineWithStorage()
+        {
+            var storage = new MemoryStorage("base");
+            storage.CreateDirectory("base\\model");
+            storage.WriteToFile("base\\model\\model.json", @"{
+	                'ApplicationData': {
+		                'Name': 'ApplicationOne',
+		                'Description': 'This is a greate application', 
+		                'Namespace': 'Company.Application.Library',
+		                'ProjectType': 'DotNetLibrary'
+	                },
+	                'Modules': [
+		                {'Name':'module1','InlcudeInJenkinsBuild':true},
+		                {'Name':'module2','InlcudeInJenkinsBuild':false},
+		                {'Name':'module3','InlcudeInJenkinsBuild':true}
+		                ]
+                }");
+            storage.CreateDirectory("base\\template");
+            storage.WriteToFile("base\\template\\sample.txt","Application Name:");
+            storage.WriteToFile("base\\template\\sample1.txt", "Application Name:@Model.ApplicationData.Name");
+            storage.CreateDirectory("base\\output");
+            engine = new Engine(storage, null);
+            engine.ProcessTemplate("base\\model\\model.json", "base\\template", "base\\output");
+            storage.GetFiles("base\\output").Count.ShouldBe(2);
+            storage.ReadFromFile("base\\output\\sample.txt").ShouldBe("Application Name:");
+            storage.ReadFromFile("base\\output\\sample1.txt").ShouldBe("Application Name:ApplicationOne");
         }
     }
+
+
 
 }

@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace FastTemplate.App
@@ -23,7 +16,7 @@ namespace FastTemplate.App
             logTextbox.Text = "Generation started.\n";
             try
             {
-                Engine.Engine.GetEngine().ProcessTemplate(configuraitonFileTextbox.Text, templateTextbox.Text, outputTextbox.Text);
+                //Engine.Engine.GetEngine().ProcessTemplate(configuraitonFileTextbox.Text, templateTextbox.Text, outputTextbox.Text);
                 logTextbox.Text += "Generation finished successfully.\n";
             }
             catch (Exception ex)
