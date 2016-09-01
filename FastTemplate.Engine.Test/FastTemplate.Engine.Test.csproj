@@ -36,6 +36,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AH.SimpleStorage, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ArafatHegazy.SimpleStorage.1.2.0\lib\AH.SimpleStorage.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.TextTemplating.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.TextTemplating.14.0.14.2.25123\lib\net45\Microsoft.VisualStudio.TextTemplating.14.0.dll</HintPath>
       <Private>True</Private>
@@ -68,9 +72,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="EngineTest.cs" />
-    <Compile Include="MemoryStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestMemoryStorage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

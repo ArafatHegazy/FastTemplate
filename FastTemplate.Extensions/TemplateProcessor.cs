@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using AH.SimpleStorage;
+using AH.SimpleStorage.Implementations;
 using FastTemplate.Engine;
-using FastTemplate.Engine.Storage;
 
 namespace FastTemplate.Extensions
 {
@@ -13,7 +14,7 @@ namespace FastTemplate.Extensions
 
         public TemplateProcessor()
         {
-            _storage = new Engine.Storage.FileStorage();
+            _storage = new FileStorage();
             templateProcessor = this;
         }
 
@@ -41,7 +42,7 @@ namespace FastTemplate.Extensions
         {
             string template = File.ReadAllText(templateFile);
             var result = CurrentEngine.ProcessString(template, model);
-            _storage.WriteToFile(outputFileName, result);
+            _storage.WriteTextToFile(outputFileName, result);
         }
 
         public string GetCurrentTemplatePath()

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using AH.SimpleStorage;
 using Newtonsoft.Json;
 using RazorEngine;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
 using RazorEngine.Text;
-using FastTemplate.Engine.Storage;
 
 namespace FastTemplate.Engine
 {
@@ -50,7 +50,7 @@ namespace FastTemplate.Engine
         /// <param name="modelFile">Model file full path</param>
         public void ProcessTemplate(string modelFile, string templateFolder, string outputFolder)
         {
-            string modelJson = Storage.ReadFromFile(modelFile);
+            string modelJson = Storage.ReadTextFromFile(modelFile);
             dynamic model = JsonConvert.DeserializeObject<dynamic>(modelJson);
             ProcessFolder(templateFolder, outputFolder, model);
         }
@@ -78,12 +78,12 @@ namespace FastTemplate.Engine
             var extention = file.GetExtention();
             if (extention == ".template")
                 return;
-            string template = Storage.ReadFromFile(file);
+            string template = Storage.ReadTextFromFile(file);
             var result = ProcessString(template, data);
             if (extention == ".templatecode")
                 return;
             var outputfile = ProcessString(file.RemovePath(),data).AddPath(outputFolder);
-            Storage.WriteToFile(outputfile, result);
+            Storage.WriteTextToFile(outputfile, result);
         }
 
     }

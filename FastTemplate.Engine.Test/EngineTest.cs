@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using AH.SimpleStorage.Implementations;
+using NUnit.Framework;
 using Shouldly;
 
 namespace FastTemplate.Engine.Test
@@ -50,7 +51,7 @@ welcome to RazorEngine!
         {
             var storage = new MemoryStorage("base");
             storage.CreateDirectory("base\\model");
-            storage.WriteToFile("base\\model\\model.json", @"{
+            storage.WriteTextToFile("base\\model\\model.json", @"{
 	                'ApplicationData': {
 		                'Name': 'ApplicationOne',
 		                'Description': 'This is a greate application', 
@@ -64,14 +65,14 @@ welcome to RazorEngine!
 		                ]
                 }");
             storage.CreateDirectory("base\\template");
-            storage.WriteToFile("base\\template\\sample.txt","Application Name:");
-            storage.WriteToFile("base\\template\\sample1.txt", "Application Name:@Model.ApplicationData.Name");
+            storage.WriteTextToFile("base\\template\\sample.txt","Application Name:");
+            storage.WriteTextToFile("base\\template\\sample1.txt", "Application Name:@Model.ApplicationData.Name");
             storage.CreateDirectory("base\\output");
             engine = new Engine(storage, null);
             engine.ProcessTemplate("base\\model\\model.json", "base\\template", "base\\output");
             storage.GetFiles("base\\output").Count.ShouldBe(2);
-            storage.ReadFromFile("base\\output\\sample.txt").ShouldBe("Application Name:");
-            storage.ReadFromFile("base\\output\\sample1.txt").ShouldBe("Application Name:ApplicationOne");
+            storage.ReadTextFromFile("base\\output\\sample.txt").ShouldBe("Application Name:");
+            storage.ReadTextFromFile("base\\output\\sample1.txt").ShouldBe("Application Name:ApplicationOne");
         }
     }
 
